@@ -1,0 +1,265 @@
+---
+title: "Datepicker"
+date: 2021-09-26T16:10:48+02:00
+draft: false
+main_title: "Tailwind angular datepicker"
+subheading: ""
+seo_title: "Tailwind angular datepicker component - examples & templates"
+description: "Responsive Angular Datepicker built with the latest Tailwind. A plugin that adds date picker functionality without custom JS code. It supports internationalization, different formats & customization options. "
+image: ""
+video: ""
+url: "/docs/standard/angular/datepicker/"
+menu:
+  angular:
+    name: "Datepicker"
+---
+
+<style>
+  #demo {
+    min-height: 500px;
+  }
+</style>
+
+
+{{< example lang="html" title="Basic">}}
+/**
+ *
+ * Do not forget to import { FormsModule } from '@angular/forms'; in to component's module
+ *
+ *
+ */
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  template: `
+    <div class="flex items-center justify-center bg-gray-200 h-full">
+    <div class="antialiased sans-serif">
+      <div>
+        <div class="container mx-auto px-4 py-2 md:py-10">
+          <div class="mb-5 w-64">
+            <label for="datepicker" class="font-bold mb-1 text-gray-700 block">Select Date</label>
+            <div class="relative">
+              <input type="hidden" name="date" x-ref="date" />
+              <input
+                type="text"
+                readonly
+                [(ngModel)]="datepickerValue"
+                (click)="showDatepicker = !showDatepicker"
+                (keydown.escape)="showDatepicker = false"
+                class="
+                  w-full
+                  pl-4
+                  pr-10
+                  py-3
+                  leading-none
+                  rounded-lg
+                  shadow-sm
+                  focus:outline-none focus:shadow-outline
+                  text-gray-600
+                  font-medium
+                "
+                placeholder="Select date"
+              />
+
+              <div class="absolute top-0 right-0 px-3 py-2">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+
+              <!-- <div {{no_of_days.length"></div>
+                              <div {{32 - new Date(year, month, 32).getDate()"></div>
+                              <div {{new Date(year, month).getDay()"></div> -->
+              <div
+                class="bg-white mt-12 rounded-lg shadow p-4 absolute top-0 left-0"
+                style="width: 17rem"
+                [hidden]="!showDatepicker"
+                (keydown.away)="showDatepicker = false"
+              >
+                <div class="flex justify-between items-center mb-2">
+                  <div>
+                    <span class="text-lg font-bold text-gray-800">{{ MONTH_NAMES[month] }}</span>
+                    <span class="ml-1 text-lg text-gray-600 font-normal">{{ year }}</span>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="
+                        transition
+                        ease-in-out
+                        duration-100
+                        inline-flex
+                        cursor-pointer
+                        hover:bg-gray-200
+                        p-1
+                        rounded-full
+                      "
+                      [ngClass]="{ 'cursor-not-allowed opacity-25': month === 0 }"
+                      [disabled]="month === 0 ? true : false"
+                      (click)="month = month - 1"
+                      (click)="getNoOfDays()"
+                    >
+                      <svg
+                        class="h-6 w-6 text-gray-500 inline-flex"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="
+                        transition
+                        ease-in-out
+                        duration-100
+                        inline-flex
+                        cursor-pointer
+                        hover:bg-gray-200
+                        p-1
+                        rounded-full
+                      "
+                      [ngClass]="{ 'cursor-not-allowed opacity-25': month === 11 }"
+                      [disabled]="month === 11 ? true : false"
+                      (click)="month = month + 1"
+                      (click)="getNoOfDays()"
+                    >
+                      <svg
+                        class="h-6 w-6 text-gray-500 inline-flex"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap mb-3 -mx-1">
+                  <ng-container *ngFor="let day of DAYS; let index = index">
+                    <div style="width: 14.26%" class="px-1">
+                      <div class="text-gray-800 font-medium text-center text-xs">{{ day }}</div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="flex flex-wrap -mx-1">
+                  <ng-container *ngFor="let blankday of blankdays">
+                    <div style="width: 14.28%" class="text-center border-none p-1 border-transparent text-sm"></div>
+                  </ng-container>
+                  <ng-container *ngFor="let date of no_of_days; let dateIndex = index; trackBy: trackByIdentity">
+                    <div style="width: 14.28%" class="px-1 mb-1">
+                      <div
+                        (click)="getDateValue(date)"
+                        class="
+                          cursor-pointer
+                          text-center text-sm
+                          rounded-full
+                          leading-loose
+                          transition
+                          ease-in-out
+                          duration-100
+                        "
+                        [ngClass]="{
+                          'bg-blue-500 text-white': isToday(date) === true,
+                          'text-gray-700 hover:bg-blue-200': isToday(date) === false
+                        }"
+                      >
+                        {{ date }}
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+`
+
+})
+export class DatePickerComponent implements OnInit {
+  MONTH_NAMES = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  showDatepicker = false;
+  datepickerValue!: string;
+  month!: number; // !: mean promis it will not be null, and it will definitely be assigned
+  year!: number;
+  no_of_days = [] as number[];
+  blankdays = [] as number[];
+
+  constructor() {}
+
+  ngOnInit(): void {
+    this.initDate();
+    this.getNoOfDays();
+  }
+
+  initDate(): void {
+    const today = new Date();
+    this.month = today.getMonth();
+    this.year = today.getFullYear();
+    this.datepickerValue = new Date(this.year, this.month, today.getDate()).toDateString();
+  }
+
+  isToday(date: number): boolean {
+    const today = new Date();
+    const d = new Date(this.year, this.month, date);
+    return today.toDateString() === d.toDateString() ? true : false;
+  }
+
+  getDateValue(date: number): void {
+    const selectedDate = new Date(this.year, this.month, date);
+    this.datepickerValue = selectedDate.toDateString();
+    this.showDatepicker = false;
+  }
+
+  getNoOfDays(): void {
+    const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+
+    // find where to start calendar day of week
+    const dayOfWeek = new Date(this.year, this.month).getDay();
+    const blankdaysArray = [];
+    for (let i = 1; i <= dayOfWeek; i++) {
+      blankdaysArray.push(i);
+    }
+
+    const daysArray = [];
+    for (let i = 1; i <= daysInMonth; i++) {
+      daysArray.push(i);
+    }
+
+    this.blankdays = blankdaysArray;
+    this.no_of_days = daysArray;
+  }
+
+  trackByIdentity = (index: number, item: any) => item;
+}
+{{< /example>}}
+
+
+Credits:     https://tailwindcomponents.com/component/datepicker-with-tailwindcss-and-alpinejs
