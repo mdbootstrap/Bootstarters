@@ -47,6 +47,13 @@ Alternatively, you can import it in the following way (bundler version):
 import 'tw-elements';
 ```
 
+If using [NextJs](https://nextjs.org/) which has server-side rendering, you
+may need to import tw-elements dynamically into your React component:
+
+```js
+useEffect(() => { import('tw-elements'); }, []);
+```
+
 ##### MDB GO / CLI
 
 Create, deploy and host anything with a single command.
