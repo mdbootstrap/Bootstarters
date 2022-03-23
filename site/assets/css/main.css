@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-h1 {
-  @apply text-5xl font-bold mt-12 mb-2;
-}
